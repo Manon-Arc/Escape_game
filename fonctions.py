@@ -59,7 +59,8 @@ def explore():
         case "Entrepôt":
             print("Tu aperçois une échelle ainsi qu'une porte au loin (et pas un porte-au-loin lol HP la ref)")
         case "Echafaudage":
-            print("Un ")
+            variables.inventory.append("feuille")
+            print("Tu as mis la main sur une feuille, ça doit faire un sacré moment qu'elle est là.")
 
 def interact():
     match variables.room:
@@ -134,56 +135,62 @@ def interact():
                         variables.etat_carton_5 = "ferme"
                         print("Tu viens de trouver une fléchette et l'ajoute à ton inventaire")
         case "Entrepôt":
-            dilemme = input('Avec quoi veux-tu intéragir ? :')
-            if dilemme == "echelle" and variables.dilemme == "non":
+            obj_entrepot = input('Avec quoi veux-tu intéragir ? :')
+            if obj_entrepot == "echelle" and variables.dilemme == "non":
                 variables.map.append("Echafaudage")
                 variables.room = "Echafaudage"
                 variables.dilemme = "oui"
                 print("L'échelle ta conduit en haut d'un échafaudage, t'es fort à cache-cache toi non ? Le garde t'as perdu de vue ")
-            elif dilemme == "porte" and variables.dilemme == "non":
+            elif obj_entrepot == "porte" and variables.dilemme == "non":
                 variables.map.append("Couloir principal")
                 variables.room = "Couloir principal"
                 variables.dilemme = "oui"
                 print("La porte ta mené dans le couloir principal")
-            else:
-                print("Tu ne peux plus intéragir ici")
+            elif obj_entrepot == "trappe":
+                variables.map.append("Couloir secondaire")
+                variables.room = "Couloir secondaire"
+                print("La trappe ta conduit jusqu'au couloir secondaire")
+            elif (obj_entrepot == "echelle" or obj_entrepot == "porte") and variables.dilemme == "oui":
+                print("Tu ne peux plus intéragir avec ça")
 
 def use():
     use_object = input("Que veux-tu utiliser ?")
     if use_object in variables.inventory:
-        if use_object == "feuille":
-            fonctions.print_feuille()
-        else:
-            match variables.room:
-                case "Hall 1":
-                    if use_object == "flechette" and variables.camera > 0:
-                        detruire_cam = input("Veux-tu tenter de détruire une caméra ?")
-                        if detruire_cam == "oui":
-                            if random.randint(1,10) <= 7:
-                                variables.camera -= 1
-                                variables.inventory.remove("flechette")
-                                print("Tu as détruit une caméra !")
-                            else:
-                                variables.inventory.remove("flechette")
-                                print("Raté... tu as perdu une flechette")
-                    if use_object == "carton":
-                        cache_carton = input("Veux-tu te cacher/déguiser à l'aide du carton ?")
-                        if cache_carton == "oui":
-                            equiper(use_object)
-                            print("Tu peux avancer en étant plus discret")
-                    else:
-                        print("Tu n'as pas cet objet dans ton inventaire")
-                case "Entrepôt":
-                    if use_object == "flechette" and variables.garde > 0:
-                        eliminer_garder = input("Veux-tu tenter d'éliminer un garde ?")
-                        if eliminer_garder == "oui":
-                            if random.randint(1,2) == 1:
-                                variables.garde -= 1
-                                variables.inventory.remove("flechette")
-                                print("Tu as éliminé un garde !")
-                            else:
-                                variables.inventory.remove("flechette")
-                                print("Raté... tu as perdu une flechette")
+        match variables.room:
+            case "Hall 1":
+                if use_object == "flechette" and variables.camera > 0:
+                    detruire_cam = input("Veux-tu tenter de détruire une caméra ?")
+                    if detruire_cam == "oui":
+                        if random.randint(1,10) <= 7:
+                            variables.camera -= 1
+                            variables.inventory.remove("flechette")
+                            print("Tu as détruit une caméra !")
+                        else:
+                            variables.inventory.remove("flechette")
+                            print("Raté... tu as perdu une flechette")
+                if use_object == "carton":
+                    cache_carton = input("Veux-tu te cacher/déguiser à l'aide du carton ?")
+                    if cache_carton == "oui":
+                        equiper(use_object)
+                        print("Tu peux avancer en étant plus discret")
+                else:
+                    print("Tu n'as pas cet objet dans ton inventaire")
+            case "Entrepôt":
+                if use_object == "flechette" and variables.garde > 0:
+                    eliminer_garder = input("Veux-tu tenter d'éliminer un garde ?")
+                    if eliminer_garder == "oui":
+                        if random.randint(1,2) == 1:
+                            variables.garde -= 1
+                            variables.inventory.remove("flechette")
+                            print("Tu as éliminé un garde !")
+                        else:
+                            variables.inventory.remove("flechette")
+                            print("Raté... tu as perdu une flechette")
+                if use_object == "feuille":
+                    print("C'est un plan de la pièce, on dirait qu'elle indique une trappe...")
+            case "Echafaudage":
+                if use_object == "feuille":
+                    print("C'est un plan de la pièce, on dirait qu'elle indique une trappe...")
 def entry():
     match variables.room:
         case "Extérieur":
