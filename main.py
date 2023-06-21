@@ -21,9 +21,11 @@ def main():
                 fonctions.explore()
             case "interact":
                 fonctions.interact()
+            case "main":
+                fonctions.en_main()
             case "rien":
-                if variables.room == "extérieur":
-                    fonctions.snap()
+                fonctions.snap()
+                break
             case "use":
                 fonctions.use()
             case 'return ta mere':

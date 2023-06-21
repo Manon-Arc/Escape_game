@@ -1,5 +1,5 @@
 global room
-room = "Hall 1"
+room = "Entrepôt"
 
 global doc
 doc = 0
@@ -11,15 +11,28 @@ global inventory
 inventory =  []
 
 global main_equipe
+main_equipe = ""
+
+global garde
+garde = 0
 
 global map
-map = ["exterieur", "Hall 1"]
+map = ["Extérieur", "Hall 1", "Entrepôt"]
+
+global dilemme
+dilemme = "non"
+
+global entreé_entrepot
+entreé_entrepot = 0
 
 global attempts_ext
 attempts_ext = 0
 
 global attempts_hall1
 attempts_hall1 = 0
+
+global attempts_entrepot
+attempts_entrepot = 0
 
 global attempts_carton_hall1
 attempts_carton_hall1 = 0

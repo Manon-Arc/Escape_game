@@ -8,7 +8,7 @@ def rule():
     print(
         "Tu peux maintenant te déplacer et explorer l'environnement n'hésite pas à bien chercher partout, de nombreux indices sont cachés, tu as accès à la liste des commandes avec 'command'\nBonne chance !")
 def command():
-    print("\nSe déplacer -> 'go'\nExplorer -> 'explore'\nInteragir -> 'interact'\nOu tu es -> 'where'\nCarte -> map\nAfficher l'inventaire -> inventory\nUtiliser un objet de ton inventaire -> 'use' ")
+    print("\nSe déplacer -> 'go'\nExplorer -> 'explore'\nInteragir -> 'interact'\nOu tu es -> 'where'\nCarte -> map\nAfficher l'inventaire -> inventory\nUtiliser un objet de ton inventaire -> 'use'\nVoir ce que tu as d'équipé -> 'main' ")
 
 def go():
     piece = input('Où veux-tu aller ? :')
@@ -33,6 +33,9 @@ def inventory():
 def equiper(obj):
     variables.main_equipe = obj
 
+def en_main():
+    print("Tu as" + variables.main_equipe + "d'équipé")
+
 def map():
     print("Tu peux aller là : " + ', '.join(variables.map))
 
@@ -46,17 +49,21 @@ def explore():
                 print("Il y a une porte derrière")
         case "Hall 1":
             if variables.attempts_hall1 == 0:
-                print("Des caméras surveilles la zone un peu plus loin ")
+                print("Des caméras surveilles la zone un peu plus loin")
                 variables.attempts_hall1 =+ 1
             if variables.attempts_hall1 == 1:
                 variables.attempts_hall1 =+ 1
                 print("On peut compter 4 caméras ainsi que 5 cartons numérotés de 1 à 5")
             else:
                 print("Le carton 1 semble plus grand que les autres")
+        case "Entrepôt":
+            print("Tu aperçois une échelle ainsi qu'une porte au loin (et pas un porte-au-loin lol HP la ref)")
+        case "Echafaudage":
+            print("Un ")
 
 def interact():
     match variables.room:
-        case "extérieur":
+        case "Extérieur":
             obj_ext = input('Avec quoi veux-tu intéragir ? :')
             if obj_ext == "porte":
                 if not "Hall 1" in variables.map:
@@ -77,16 +84,13 @@ def interact():
                         if not "carton" in variables.inventory:
                             variables.inventory.append("carton")
                             print("Tu as récupéré le carton")
-                            print(variables.attempts_carton_hall1)
                         else:
                             print("Le carton est déjà dans ton inventaire")
-                            print(variables.attempts_carton_hall1)
 
                     if variables.attempts_carton_hall1 < 4 and variables.etat_carton_1 == "ferme":
                         variables.etat_carton_1 = "prendre"
                         variables.attempts_carton_hall1 += 1
                         print("Le carton est vide...")
-                        print(variables.attempts_carton_hall1)
 
                 if obj_hall1 == "carton 2":
                     if variables.attempts_carton_hall1 < 4 and variables.etat_carton_2 == "ouvert":
@@ -115,9 +119,10 @@ def interact():
                         print("Tu as déjà ouvert le " + obj_hall1)
                     else:
                         variables.inventory.append("flechette")
+                        variables.inventory.append("flechette")
                         variables.attempts_carton_hall1 += 1
                         variables.etat_carton_4 = "ferme"
-                        print("Tu viens de trouver une fléchette et l'ajoute à ton inventaire")
+                        print("Tu viens de trouver 2 fléchette et les ajoute à ton inventaire")
 
                 if obj_hall1 == "carton 5":
                     if variables.attempts_carton_hall1 < 4 and variables.etat_carton_5 == "ouvert":
@@ -128,42 +133,90 @@ def interact():
                         variables.attempts_carton_hall1 += 1
                         variables.etat_carton_5 = "ferme"
                         print("Tu viens de trouver une fléchette et l'ajoute à ton inventaire")
+        case "Entrepôt":
+            dilemme = input('Avec quoi veux-tu intéragir ? :')
+            if dilemme == "echelle" and variables.dilemme == "non":
+                variables.map.append("Echafaudage")
+                variables.room = "Echafaudage"
+                variables.dilemme = "oui"
+                print("L'échelle ta conduit en haut d'un échafaudage, t'es fort à cache-cache toi non ? Le garde t'as perdu de vue ")
+            elif dilemme == "porte" and variables.dilemme == "non":
+                variables.map.append("Couloir principal")
+                variables.room = "Couloir principal"
+                variables.dilemme = "oui"
+                print("La porte ta mené dans le couloir principal")
+            else:
+                print("Tu ne peux plus intéragir ici")
 
 def use():
-    match variables.room:
-        case "Hall 1":
-            use_object = input("Que veux-tu utiliser ?")
-            if use_object in variables.inventory:
-                if use_object == "flechette" and variables.camera > 0:
-                    detruire_cam = input("Veux-tu tenter de détruire une caméra ?")
-                    if detruire_cam == "oui":
-                        if random.randint(1,10) >= 7:
-                            variables.camera -= 1
-                            variables.inventory.remove("flechette")
-                            print("Tu as détruit une caméra !")
-                        else:
-                            variables.inventory.remove("flechette")
-                            print("Raté... tu as perdu une flechette")
-                if use_object == "carton":
-                    cache_carton = input("Veux-tu te cacher/déguiser à l'aide du carton ?")
-                    if cache_carton == "oui":
-                        equiper(use_object)
-                        print("Tu peux avancer en toute discretion")
-            else:
-                print("Tu n'as pas cet objet dans ton inventaire")
+    use_object = input("Que veux-tu utiliser ?")
+    if use_object in variables.inventory:
+        if use_object == "feuille":
+            fonctions.print_feuille()
+        else:
+            match variables.room:
+                case "Hall 1":
+                    if use_object == "flechette" and variables.camera > 0:
+                        detruire_cam = input("Veux-tu tenter de détruire une caméra ?")
+                        if detruire_cam == "oui":
+                            if random.randint(1,10) <= 7:
+                                variables.camera -= 1
+                                variables.inventory.remove("flechette")
+                                print("Tu as détruit une caméra !")
+                            else:
+                                variables.inventory.remove("flechette")
+                                print("Raté... tu as perdu une flechette")
+                    if use_object == "carton":
+                        cache_carton = input("Veux-tu te cacher/déguiser à l'aide du carton ?")
+                        if cache_carton == "oui":
+                            equiper(use_object)
+                            print("Tu peux avancer en étant plus discret")
+                    else:
+                        print("Tu n'as pas cet objet dans ton inventaire")
+                case "Entrepôt":
+                    if use_object == "flechette" and variables.garde > 0:
+                        eliminer_garder = input("Veux-tu tenter d'éliminer un garde ?")
+                        if eliminer_garder == "oui":
+                            if random.randint(1,2) == 1:
+                                variables.garde -= 1
+                                variables.inventory.remove("flechette")
+                                print("Tu as éliminé un garde !")
+                            else:
+                                variables.inventory.remove("flechette")
+                                print("Raté... tu as perdu une flechette")
 def entry():
     match variables.room:
+        case "Extérieur":
+            print("Il pleut tu ferais mieux de re rentrer")
         case "Hall 1":
             print("Il fait sombre et humide, on entend la chute de gouttes d'eau résonner...")
             variables.map.append("Entrepôt")
-
+        case "Entrepôt":
+            if variables.entreé_entrepot == 0:
+                if variables.camera == 0:
+                    variables.map.append("Couloir secondaire")
+                    print("Il n'y a personne, tu peux avancer ")
+                    variables.entreé_entrepot +=1
+                if variables.main_equipe == "carton" and variables.camera:
+                    if random.randint(1,2) == 1:
+                        variables.entreé_entrepot += 1
+                        print("Il n'y a personne, tu peux avancer ")
+                    else:
+                        variables.garde += 1
+                        variables.entreé_entrepot += 1
+                        print("Il y a un garde, tu es repéré !")
+                if variables.camera > 1 and variables.main_equipe != "carton":
+                    variables.garde += 1
+                    variables.entreé_entrepot +=1
+                    print("Il y a un garde, tu es repéré !")
+        case "Echafaudage":
+            print("Tu surplombes tout l'entrepôt de ta hauteur")
 def snap():
     with open("asset/snap.txt", "r") as fichier:
         lignes = fichier.readlines()
 
     for ligne in lignes:
         print(ligne.strip())
-
 
 def bim():
     with open("asset/bim.txt", "r") as fichier:
