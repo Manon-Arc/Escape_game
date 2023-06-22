@@ -215,7 +215,8 @@ def interact():
                     if not "Couloir principal" in variables.map:
                         variables.map.append()
                         variables.room = "Couloir principal"
-                        print("La porte s'ouvre, tu arrives dans le couloir principal")
+                        print("La porte s'ouvre")
+                        entry()
                     else:
                         print("Tu as déjà ouvert la porte")
             else :
