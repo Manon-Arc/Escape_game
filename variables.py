@@ -1,5 +1,5 @@
 global room
-room = "Entrepôt"
+room = "Hall 1"
 
 global doc
 doc = 0

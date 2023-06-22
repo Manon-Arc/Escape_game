@@ -12,7 +12,7 @@ def command():
 
 def go():
     piece = input('Où veux-tu aller ? :')
-    if piece in variables.map:
+    if piece in variables.map and variables.room != piece:
         variables.room = piece
         print("Tu es maintenant ici : " + variables.room)
         entry()
@@ -50,17 +50,26 @@ def explore():
         case "Hall 1":
             if variables.attempts_hall1 == 0:
                 print("Des caméras surveilles la zone un peu plus loin")
-                variables.attempts_hall1 =+ 1
-            if variables.attempts_hall1 == 1:
-                variables.attempts_hall1 =+ 1
+                variables.attempts_hall1 += 1
+                print(variables.attempts_hall1)
+            elif variables.attempts_hall1 == 1:
                 print("On peut compter 4 caméras ainsi que 5 cartons numérotés de 1 à 5")
+                variables.attempts_hall1 += 1
+                print(variables.attempts_hall1)
             else:
                 print("Le carton 1 semble plus grand que les autres")
         case "Entrepôt":
-            print("Tu aperçois une échelle ainsi qu'une porte au loin (et pas un porte-au-loin lol HP la ref)")
+            if variables.garde != 0:
+                print("Tu aperçois une échelle ainsi qu'une porte au loin (et pas un porte-au-loin lol HP la ref)")
+            else:
+                print("La voie est libre tu peux avancer")
         case "Echafaudage":
             variables.inventory.append("feuille")
             print("Tu as mis la main sur une feuille, ça doit faire un sacré moment qu'elle est là.")
+        case "Couloir secondaire":
+            print("Il n'y a qu'une porte, si on en crois les panneaux elle mène à la salle des archives ")
+        case "Salle des archives":
+            print("Il y a pleins d'étagères remplis de caisses poussiéreuses mais un dossier attire ton attention")
 
 def interact():
     match variables.room:
@@ -79,6 +88,8 @@ def interact():
             obj_hall1 = input('Avec quoi veux-tu intéragir ? :')
             if (obj_hall1 == "carton 1" or obj_hall1 == "carton 2" or obj_hall1 == "carton 3" or obj_hall1 == "carton 4" or obj_hall1 == "carton 5") and variables.attempts_carton_hall1 == 4:
                 print("Tu ne peux plus ouvrir de cartons")
+            elif (obj_hall1 != "carton 1" or obj_hall1 != "carton 2" or obj_hall1 != "carton 3" or obj_hall1 != "carton 4" or obj_hall1 != "carton 5"):
+                print("Tu ne peux pas intéragir avec ça")
             else:
                 if obj_hall1 == "carton 1":
                     if variables.etat_carton_1 == "prendre":
@@ -123,7 +134,7 @@ def interact():
                         variables.inventory.append("flechette")
                         variables.attempts_carton_hall1 += 1
                         variables.etat_carton_4 = "ferme"
-                        print("Tu viens de trouver 2 fléchette et les ajoute à ton inventaire")
+                        print("Tu viens de trouver 2 fléchettes et les ajoute à ton inventaire")
 
                 if obj_hall1 == "carton 5":
                     if variables.attempts_carton_hall1 < 4 and variables.etat_carton_5 == "ouvert":
@@ -146,12 +157,25 @@ def interact():
                 variables.room = "Couloir principal"
                 variables.dilemme = "oui"
                 print("La porte ta mené dans le couloir principal")
+                entry()
             elif obj_entrepot == "trappe":
                 variables.map.append("Couloir secondaire")
                 variables.room = "Couloir secondaire"
                 print("La trappe ta conduit jusqu'au couloir secondaire")
+                entry()
             elif (obj_entrepot == "echelle" or obj_entrepot == "porte") and variables.dilemme == "oui":
                 print("Tu ne peux plus intéragir avec ça")
+        case "Couloir secondaire":
+            obj_couloiresec = input('Avec quoi veux-tu intéragir ? :')
+            if obj_couloiresec == "porte":
+                variables.map.append("Salle des archives")
+                print("La porte s'ouvre en un grincement bruyant")
+        case "Salle des archives":
+            obj_sallearchives = input('Avec quoi veux-tu intéragir ? :')
+            if obj_sallearchives == "dossier":
+                variables.inventory.append("doc_Dr")
+                print("Tu viens de trouver un des documents du Dr Hartman ! Il est maintenant dans ton inventaire ")
+
 
 def use():
     use_object = input("Que veux-tu utiliser ?")
@@ -168,7 +192,7 @@ def use():
                         else:
                             variables.inventory.remove("flechette")
                             print("Raté... tu as perdu une flechette")
-                if use_object == "carton":
+                elif use_object == "carton":
                     cache_carton = input("Veux-tu te cacher/déguiser à l'aide du carton ?")
                     if cache_carton == "oui":
                         equiper(use_object)
@@ -187,37 +211,45 @@ def use():
                             variables.inventory.remove("flechette")
                             print("Raté... tu as perdu une flechette")
                 if use_object == "feuille":
-                    print("C'est un plan de la pièce, on dirait qu'elle indique une trappe...")
+                    print("C'est un plan de la pièce, on dirait qu'elle indique une trappe dans l'Entrepôt...")
             case "Echafaudage":
                 if use_object == "feuille":
-                    print("C'est un plan de la pièce, on dirait qu'elle indique une trappe...")
+                    print("C'est un plan de la pièce, on dirait qu'elle indique une trappe dans l'Entrepôt...")
 def entry():
     match variables.room:
         case "Extérieur":
             print("Il pleut tu ferais mieux de re rentrer")
         case "Hall 1":
             print("Il fait sombre et humide, on entend la chute de gouttes d'eau résonner...")
-            variables.map.append("Entrepôt")
+            if not "Entrepôt" in variables.map:
+                variables.map.append("Entrepôt")
         case "Entrepôt":
             if variables.entreé_entrepot == 0:
                 if variables.camera == 0:
+                    variables.entreé_entrepot +=1
                     variables.map.append("Couloir secondaire")
                     print("Il n'y a personne, tu peux avancer ")
-                    variables.entreé_entrepot +=1
-                if variables.main_equipe == "carton" and variables.camera:
+                if variables.main_equipe == "carton" and variables.camera > 0:
                     if random.randint(1,2) == 1:
                         variables.entreé_entrepot += 1
+                        variables.map.append("Couloir secondaire")
                         print("Il n'y a personne, tu peux avancer ")
                     else:
                         variables.garde += 1
                         variables.entreé_entrepot += 1
                         print("Il y a un garde, tu es repéré !")
-                if variables.camera > 1 and variables.main_equipe != "carton":
+                if variables.camera > 0 and variables.main_equipe != "carton":
                     variables.garde += 1
                     variables.entreé_entrepot +=1
                     print("Il y a un garde, tu es repéré !")
         case "Echafaudage":
             print("Tu surplombes tout l'entrepôt de ta hauteur")
+        case "Couloir secondaire":
+            print("C'est très étroit ici")
+        case "Couloir principal":
+            print("Ce couloir est si long que tu n'en vois pas le bout, un frisson te parcourt...")
+        case "Salle des archives":
+            print("*Tousse Tousse* cette poussière...")
 def snap():
     with open("asset/snap.txt", "r") as fichier:
         lignes = fichier.readlines()
