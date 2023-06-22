@@ -1,6 +1,7 @@
 import fonctions
 import variables
 import random
+import time
 def history():
     print("\nTu es un agent d'élite, spécialisé dans les missions de haut niveau. Cette fois-ci, tu es appelé à résoudre une crise internationale majeure.\nUn scientifique renommé, le Dr. William Hartman, a été enlevé par une organisation criminelle dangereuse.\nIl est sur le point de révéler une découverte scientifique révolutionnaire, susceptible de bouleverser l'équilibre du pouvoir mondial.\nTa mission consiste à pénétrer dans le repaire secret de l'organisation criminelle, situé au cœur d'un bâtiment qui semble désaffecté.\nTu dois libérer le Dr. Hartman, récupérer ses précieuses informations et échapper avant que l'organisation ne s'en rende compte.\nTu disposez de 60 minutes pour parcourir les pièces du repaire, résoudre des énigmes complexes, pirater des systèmes de sécurité et trouver des indices stratégiques.\nSeras-tu capables de neutraliser l'organisation criminelle, sauver le Dr. Hartman et protéger les secrets de l'Opération Hélios ?\nLe sort du monde repose entre tes mains. Le compte à rebours a commencé. Prépares-toi à une mission palpitante et intense !\n")
 
@@ -67,9 +68,18 @@ def explore():
             variables.inventory.append("feuille")
             print("Tu as mis la main sur une feuille, ça doit faire un sacré moment qu'elle est là.")
         case "Couloir secondaire":
-            print("Il n'y a qu'une porte, si on en crois les panneaux elle mène à la salle des archives ")
+            print("Il n'y a qu'une porte, si on en crois les panneaux elle mène à la salle des archives")
         case "Salle des archives":
-            print("Il y a pleins d'étagères remplis de caisses poussiéreuses mais un dossier attire ton attention")
+            if variables.attempts_sallearchive == 0:
+                variables.attempts_sallearchive +=1
+                print("Il y a pleins d'étagères remplis de caisses poussiéreuses mais un dossier attire ton attention")
+            elif variables.attempts_sallearchive == 1:
+                variables.attempts_sallearchive +=1
+                print("Tu sens un léger courant d'air")
+            else:
+                print("Tu te rend compte que ça vient d'une ventilation")
+        case "Sas":
+            print("Il y a 2 placards au fond de la piece ainsi qu'une porte")
 
 def interact():
     match variables.room:
@@ -113,7 +123,6 @@ def interact():
                         variables.attempts_carton_hall1 += 1
                         variables.etat_carton_2 = "ferme"
                         print("Tu viens de trouver une fléchette et l'ajoute à ton inventaire")
-
 
                 if obj_hall1 == "carton 3":
                     if variables.attempts_carton_hall1 < 4 and variables.etat_carton_3 == "ouvert":
@@ -175,7 +184,42 @@ def interact():
             if obj_sallearchives == "dossier":
                 variables.inventory.append("doc_Dr")
                 print("Tu viens de trouver un des documents du Dr Hartman ! Il est maintenant dans ton inventaire ")
-
+            if obj_sallearchives == "ventilation":
+                variables.map.append("Conduit")
+                variables.room = "Conduit"
+                print("Tu te faufiles à travers le conduit")
+                time.sleep(2)
+                vitesse = input("Préfères-tu te déplacer de façon rapide ou lente dans le conduit ? :")
+                if vitesse == "rapide":
+                    if random.randint(1,2) == 1:
+                        variables.map.append("Salle de réunion")
+                        variables.room = "Salle de réunion"
+                        print("Le conduit se met à trembler : *Boum* Les filles je suis tombééééééhhh")
+                        entry()
+                    else:
+                        variables.map.append("Couloir principal")
+                        variables.room = "Couloir principal"
+                        print("Le conduit débouche dans le couloir principal")
+                elif vitesse == "lente":
+                    variables.map.append("Couloir principal")
+                    variables.room = "Couloir principal"
+                    print("Le conduit débouche dans le couloir principal")
+        case "Sas":
+            obj_sas = input('Avec quoi veux-tu intéragir ? :')
+            if obj_sas == "placard 2":
+                variables.inventory.append("uniforme")
+                print("Tu viens de récupérer un uniforme de gardes, avec un peu de chance tu pourras l'utiliser pour rester sous couverture")
+            elif obj_sas == "placard 1":
+                print("C'est vide...")
+            elif obj_sas == "porte":
+                    if not "Couloir principal" in variables.map:
+                        variables.map.append()
+                        variables.room = "Couloir principal"
+                        print("La porte s'ouvre, tu arrives dans le couloir principal")
+                    else:
+                        print("Tu as déjà ouvert la porte")
+            else :
+                print("Tu ne peux pas intéragir avec ça")
 
 def use():
     use_object = input("Que veux-tu utiliser ?")
@@ -206,7 +250,7 @@ def use():
                         if random.randint(1,2) == 1:
                             variables.garde -= 1
                             variables.inventory.remove("flechette")
-                            print("Tu as éliminé un garde !")
+                            print("Tu as éliminé un garde ! C'est ciao !")
                         else:
                             variables.inventory.remove("flechette")
                             print("Raté... tu as perdu une flechette")
@@ -237,11 +281,11 @@ def entry():
                     else:
                         variables.garde += 1
                         variables.entreé_entrepot += 1
-                        print("Il y a un garde, tu es repéré !")
+                        print("Bah frérot je suis presque sur que les cartons ça bouge pas à la base tu es repéré, court ta mère!")
                 if variables.camera > 0 and variables.main_equipe != "carton":
                     variables.garde += 1
                     variables.entreé_entrepot +=1
-                    print("Il y a un garde, tu es repéré !")
+                    print("Il y a un garde, ouaieuh t'es dans la merde !")
         case "Echafaudage":
             print("Tu surplombes tout l'entrepôt de ta hauteur")
         case "Couloir secondaire":
@@ -249,7 +293,17 @@ def entry():
         case "Couloir principal":
             print("Ce couloir est si long que tu n'en vois pas le bout, un frisson te parcourt...")
         case "Salle des archives":
-            print("*Tousse Tousse* cette poussière...")
+            print("*Tousse Tousse* Quelle poussière...")
+        case "Salle de réunion":
+            if random.randint(1,100) == 1:
+                variables.map.append("Sas")
+                variables.room = "Sas"
+                print("BUUUUUUUUT *Ils ne t'ont pas entendu tu en profites pour t'enfuir vers la porte")
+            else:
+                print("Les gardes ton vue c'est fini pour toi...")
+                loose()
+        case "Sas":
+            print("♫ Sas-en va et Sas-revient ♫ (référence au 'Sas') C'est sen-sas-ionnel ce jeu de mot non ? ^_^ (encore lol tavu)")
 def snap():
     with open("asset/snap.txt", "r") as fichier:
         lignes = fichier.readlines()
@@ -264,6 +318,33 @@ def bim():
     for ligne in lignes:
         print(ligne.strip())
 
+def korogu():
+    with open("asset/korogu.txt", "r") as fichier:
+        lignes = fichier.readlines()
+
+    for ligne in lignes:
+        print(ligne.strip())
+
+def migraculous():
+    if random.randint(1,2) == 1:
+        with open("asset/lady_beurre.txt", "r") as fichier:
+            lignes = fichier.readlines()
+
+        for ligne in lignes:
+            print(ligne.strip())
+        print("♫ Migraculous porte-bonheurt lady magique et laby-beurre ♫")
+    else:
+        with open("asset/gras_noir.txt", "r") as fichier:
+            lignes = fichier.readlines()
+
+        for ligne in lignes:
+            print(ligne.strip())
+        print("♫ C'est moi gras noir, toujours présent, j'ai les doigts gras vive l'saucisson ♫")
+
 def return_ta_win():
     bim()
     print("Le Dr. William Hartman s'est échappé sans votre aide. Félicitation vous n'avez servi à rien !")
+
+def loose():
+    print("Ton parcours s'achève ici, mais n'abandonne pas pour autant. Retente ta chance et explore les multiples voies qui te mèneront à d'autres fins captivantes.\nLe jeu n'est pas encore terminé, il te reste encore beaucoup à découvrir.")
+    snap()

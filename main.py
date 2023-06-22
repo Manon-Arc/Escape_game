@@ -28,9 +28,11 @@ def main():
                 break
             case "use":
                 fonctions.use()
-            case 'return ta mere':
+            case "return ta mere":
                 fonctions.return_ta_win()
                 break
+            case "migraculous":
+                fonctions.migraculous()
             case _:
                 fonctions.command()
 

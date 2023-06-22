@@ -17,7 +17,7 @@ global garde
 garde = 0
 
 global map
-map = ["Extérieur", "Hall 1", "Entrepôt"]
+map = ["Extérieur", "Hall 1", "Entrepôt", "Salle des archives", "Sas"]
 
 global dilemme
 dilemme = "non"
@@ -27,6 +27,9 @@ entreé_entrepot = 0
 
 global attempts_ext
 attempts_ext = 0
+
+global attempts_sallearchive
+attempts_sallearchive = 0
 
 global attempts_hall1
 attempts_hall1 = 0
