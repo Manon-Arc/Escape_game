@@ -38,6 +38,8 @@ def main():
                 break
             case "ma bite":
                 print("Ce n'est pas très approprié...")
+            case "migraculous":
+                fonctions.migraculous()
             case _:
                 fonctions.command()
 
