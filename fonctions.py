@@ -3,7 +3,7 @@ import variables
 import random
 import time
 def history():
-    print("\nTu es un agent d'élite, spécialisé dans les missions de haut niveau. Cette fois-ci, tu es appelé à résoudre une crise internationale majeure.\nUn scientifique renommé, le Dr. William Hartman, a été enlevé par une organisation criminelle dangereuse.\nIl est sur le point de révéler une découverte scientifique révolutionnaire, susceptible de bouleverser l'équilibre du pouvoir mondial.\nTa mission consiste à pénétrer dans le repaire secret de l'organisation criminelle, situé au cœur d'un bâtiment qui semble désaffecté.\nTu dois libérer le Dr. Hartman, récupérer ses précieuses informations et échapper avant que l'organisation ne s'en rende compte.\nTu disposez de 60 minutes pour parcourir les pièces du repaire, résoudre des énigmes complexes, pirater des systèmes de sécurité et trouver des indices stratégiques.\nSeras-tu capables de neutraliser l'organisation criminelle, sauver le Dr. Hartman et protéger les secrets de l'Opération Hélios ?\nLe sort du monde repose entre tes mains. Le compte à rebours a commencé. Prépares-toi à une mission palpitante et intense !\n")
+    print("\nTu es un agent d'élite, spécialisé dans les missions de haut niveau. Cette fois-ci, tu es appelé à résoudre une crise internationale majeure.\nUn scientifique renommé, le Dr. William Hartman, a été enlevé par une organisation criminelle dangereuse.\nIl est sur le point de révéler une découverte scientifique révolutionnaire, susceptible de bouleverser l'équilibre du pouvoir mondial.\nTa mission consiste à pénétrer dans le repaire secret de l'organisation criminelle, situé au cœur d'un bâtiment qui semble désaffecté.\nTu dois libérer le Dr. Hartman, récupérer ses précieuses informations et échapper avant que l'organisation ne s'en rende compte.\nTu disposez de 30 minutes pour parcourir les pièces du repaire, résoudre des énigmes, controuner les systèmes de sécurité et trouver des indices stratégiques.\nSeras-tu capables de neutraliser l'organisation criminelle, sauver le Dr. Hartman et protéger les secrets de l'Opération Hélios ?\nLe sort du monde repose entre tes mains. Le compte à rebours a commencé. Prépares-toi à une mission palpitante, intense et semé d'embuches!\n")
 
 def rule():
     print(
@@ -101,8 +101,14 @@ def explore():
             else:
                 print("Quelque chose semble dépasser du boitier de commande...")
         case "Laboratoire":
+            variables.inventory.append("pistolet")
             print("Vous remarquez une porte peut-être faudrait-il une clé ?")
-            print("En faisant de tour du laboratoire, vous relevez la présence de pas mal de choses :\n-carton,\n-box,\n- casier,\n- becher,\n- caisse à outil,\n- pierre étrange,\n- microscope")
+            print("En faisant de tour du laboratoire, vous relevez la présence de pas mal de choses :\n-carton,\n-box,\n- casier,\n- becher,\n- caisse à outil,\n- pierre étrange,\n- microscope\nVous récupérez également un pistolet avec un chargeur de 5 balles, il est dans votre inventaire")
+        case "Toit":
+            if variables.balle != 0:
+                print("Tu ne peux pas explorer ici")
+            else:
+                print("Il ne reste qu'un seul garde : sauve le Dr Hartman")
 def interact():
     match variables.room:
         case "Extérieur":
@@ -205,6 +211,7 @@ def interact():
             obj_sallearchives = input('Avec quoi veux-tu intéragir ? :')
             if obj_sallearchives == "dossier":
                 variables.inventory.append("doc_Dr")
+                variables.doc += 1
                 print("Tu viens de trouver un des documents du Dr Hartman ! Il est maintenant dans ton inventaire ")
             if obj_sallearchives == "ventilation":
                 variables.map.append("Conduit")
@@ -259,7 +266,7 @@ def interact():
                             print("Des gardes arrivent du bout du couloir, et te font signe\nTu rappuies rapidement sur le bouton et la porte se ferme, heureusement que tu portais l'uniforme")
                             variables.map = []
                             variables.map.append("Laboratoire")
-                            variables.room == "Laboratoire"
+                            variables.room = "Laboratoire"
                             print("*Monte au 3e...*")
                             time.sleep(2)
                             entry()
@@ -269,12 +276,13 @@ def interact():
                 else:
                     variables.map = []
                     variables.map.append("Laboratoire")
-                    variables.room == "Laboratoire"
+                    variables.room = "Laboratoire"
                     print("*Monte au 3e...*")
                     time.sleep(2)
                     entry()
             elif obj_ascenseur == "boitier de commande":
                 variables.inventory.append("doc_Dr")
+                variables.doc += 1
                 print("Tu viens de trouver un des documents du Dr Hartman ! Il est maintenant dans ton inventaire ")
         case "Laboratoire":
             obj_labo = input('Avec quoi veux-tu intéragir ? :')
@@ -283,7 +291,9 @@ def interact():
                 time.sleep(2)
                 print("Cote cote 🤌")
             elif obj_labo == "box":
-                print("Il n'y a rien ici")
+                variables.inventory.append("doc_Dr")
+                variables.doc += 1
+                print("Tu viens de trouver un des documents du Dr Hartman ! Il est maintenant dans ton inventaire ")
             elif obj_labo == "casier":
                 print("Ce casier m'a l'air louche")
                 time.sleep(1)
@@ -310,7 +320,9 @@ def interact():
                 variables.inventory.append("mot")
                 print("Tu as trouvé un mot plier près de l'appareil, il est maintenant dans ton inventaire")
             elif obj_labo == "porte":
+                variables.map.append("Cage d'escalier")
                 variables.map.append("Toit")
+                variables.room = "Cage d'escalier"
                 print("La porte était déjà déverouillé... SORRY ;)\nTu arrives dans une cage d'escalier avec un accès direct au toit")
             else:
                 print("Tu ne peux pas intéragir avec ça")
@@ -343,8 +355,8 @@ def use():
                     if cache_carton == "oui":
                         equiper(use_object)
                         print("Tu peux avancer en étant plus discret")
-                else:
-                    print("Tu n'as pas cet objet dans ton inventaire")
+                    else:
+                        print("Tu ne peux pas utiliser ça ici")
             case "Entrepôt":
                 if use_object == "flechette" and variables.garde > 0:
                     eliminer_garder = input("Veux-tu tenter d'éliminer un garde ?")
@@ -358,12 +370,45 @@ def use():
                             print("Raté... tu as perdu une flechette")
                 if use_object == "feuille":
                     print("C'est un plan de la pièce, on dirait qu'elle indique une trappe dans l'Entrepôt...")
+                else:
+                    print("Tu ne peux pas utiliser ça ici")
             case "Echafaudage":
                 if use_object == "feuille":
                     print("C'est un plan de la pièce, on dirait qu'elle indique une trappe dans l'Entrepôt...")
+                else:
+                    print("Tu ne peux pas utiliser ça ici")
             case "Laboratoire":
                 if use_object == "mot":
-                    print("Je ne pense pas qu'il y ai de bonnes ou de mauvaise situation,\nsi je devais résumer ma vie avec vous aujourd'hui c'est avant tout des rencontres des gens qui m'ont tendu la mains a des moments ou je ne m'y attendais pas")
+                    print("Le mot indique :\nJe ne pense pas qu'il y ai de bonnes ou de mauvaises situations,\nsi je devais résumer ma vie avec vous aujourd'hui c'est avant tout des rencontres des gens qui m'ont tendu la mains à des moments où je ne m'y attendais pas")
+                else:
+                    print("Tu ne peux pas utiliser ça ici")
+            case "Toit":
+                if use_object == "pistolet":
+                    if variables.balle > 0:
+                        tirer = input("Veux-tu tenter d'éliminer un garde ?")
+                        if tirer == "oui":
+                            variables.garde -= 1
+                            print("Tu as éliminé un garde ! C'est ciao !")
+                            if variables.garde == 1:
+                                variables.final = True
+                            elif variables.garde == 0:
+                                win()
+                    else:
+                        print("Tu n'as plus de munitions...")
+                elif use_object == "flechette" and variables.garde > 0:
+                    final_fight = input("Veux-tu tenter d'éliminer un garde ?")
+                    if final_fight == "oui":
+                        variables.garde -= 1
+                        print("Tu as éliminé un garde ! C'est ciao !")
+                        if variables.garde == 1:
+                            variables.final = True
+                        elif variables.garde == 0:
+                            win()
+                else:
+                    print("Tu ne peux pas utiliser ça ici")
+    else:
+        print("Tu n'as pas cet objet dans ton inventaire")
+
 def entry():
     match variables.room:
         case "Extérieur":
@@ -413,6 +458,29 @@ def entry():
             print("*Musique d'ascenseur*")
         case "Laboratoire":
             print("Une atmosphère pessante règne dans cette pièce\nLes murs décrépis et les fenêtres brisées témoignent de l'usure du temps et de l'absence d'activité humaine depuis des années.")
+        case "Toit":
+            variables.map = []
+            variables.garde = 6
+            print("Ton regard se pose sur le Dr Hartman, entourée de six gardes. La tension monte en toi, mais tu ne recules pas, tu sais ce qu'il te reste à faire, l'avenir du monde est entre tes mains")
+
+def terminer_le_travail():
+    print("N'ayant plus d'arme à ta disposition, tu t'élances sur le dernier garde dans le but de l'achever.")
+    time.sleep(3)
+    print("Lorsque tu arrives à son niveau, tu sens la pression monter, tu ne veux pas raté la mission aussi près du but...")
+    time.sleep(3)
+    print("Le garde engage le combat en t'envoyant un crochet du droit, tu l'esquives de justesse.")
+    time.sleep(3)
+    print("Sans que tu ne t'en rendes compte, un uppercut de son bras gauche te touche au niveau du menton.")
+    time.sleep(3)
+    print("Malgès le fait que ce coups t'ait pas mal sonné tu te relèves en un instant foncant tête baissé.")
+    time.sleep(3)
+    print("Cet action perturba le garde ce qui le mit à ta merci, sans te poser de question tu en profites pour le plaquer au sol")
+    time.sleep(3)
+    print("Maintenant qu'il est neutralisé, tu en profites pour l'attacher à l'aide de la corde qui maintenait le Dr. Hartman")
+    time.sleep(3)
+    print("Une fois cet affrontement terminé tu appelles l'organisation pour vous faire expatrier.")
+    time.sleep(3)
+    win()
 def snap():
     with open("asset/snap.txt", "r") as fichier:
         lignes = fichier.readlines()
@@ -459,8 +527,20 @@ def migraculous():
 
 def return_ta_win():
     bim()
+    time.sleep(1)
     print("Le Dr. William Hartman s'est échappé sans votre aide. Félicitation vous n'avez servi à rien !")
 
 def loose():
-    print("Ton parcours s'achève ici, mais n'abandonne pas pour autant. Retente ta chance et explore les multiples voies qui te mèneront à d'autres fins captivantes.\nLe jeu n'est pas encore terminé, il te reste encore beaucoup à découvrir.")
     snap()
+    time.sleep(1)
+    print("Ton parcours s'achève ici, mais n'abandonne pas pour autant. Retente ta chance et explore les multiples voies qui te mèneront à d'autres fins captivantes.\nLe jeu n'est pas encore terminé, il te reste encore beaucoup à découvrir.")
+
+def win():
+    bim()
+    time.sleep(1)
+    if variables.doc > 0:
+        print("Félicitation agent ! Grâce à ta perspicacité et ta bravoure, tu as réussi la mission Hélios avec brio !\nLe Dr. Hartman est en sécurité et les informations confidentielles sont entre de bonnes mains. Merci d'avoir accompli cette mission avec succès et d'avoir préservé la paix mondiale !")
+        variables.fin = True
+    else:
+        print("Félicitation agent ! Grâce à ta perspicacité et ta bravoure, le Dr. Hartman est en sécurité.\nCependant, tu n'as pas réussi à récupérer les informations confidentielles. Réessai, nous sommes persuader que tu es capable de mener cette mission à bien avec un peu d'entraînement !")
+        variables.fin = True

@@ -5,6 +5,8 @@ def main():
     fonctions.history()
     fonctions.rule()
     while True:
+        if variables.fin == True:
+            break
         user = input('Que veux-tu faire ? : ')
         match user:
             case "command":
@@ -28,6 +30,9 @@ def main():
                 break
             case "use":
                 fonctions.use()
+            case "terminer le travail":
+                if variables.final == True:
+                    fonctions.terminer_le_travail()
             case "return ta mere":
                 fonctions.return_ta_win()
                 break

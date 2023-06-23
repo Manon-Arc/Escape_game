@@ -1,5 +1,11 @@
 global room
-room = "Laboratoire"
+room = "Extérieur"
+
+global final
+final = False
+
+global fin
+fin = False
 
 global doc
 doc = 0
@@ -16,8 +22,11 @@ main_equipe = ""
 global garde
 garde = 0
 
+global balle
+balle = 5
+
 global map
-map = ["Extérieur", "Ascenseur"]
+map = ["Extérieur"]
 
 global dilemme
 dilemme = "non"
