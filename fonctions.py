@@ -42,7 +42,7 @@ def map():
 
 def explore():
     match variables.room:
-        case "extérieur":
+        case "Extérieur":
             if variables.attempts_ext == 0:
                 print("l'entrée principal semble condamnée...")
                 variables.attempts_ext =+ 1
