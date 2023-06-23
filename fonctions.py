@@ -99,9 +99,8 @@ def explore():
             else:
                 print("Quelque chose semble dépasser du boitier de commande...")
         case "Laboratoire":
-            variables.inventory.append("pistolet")
             print("Vous remarquez une porte peut-être faudrait-il une clé ?")
-            print("En faisant de tour du laboratoire, vous relevez la présence de pas mal de choses :\n-carton,\n-box,\n- casier,\n- becher,\n- caisse à outil,\n- pierre étrange,\n- microscope\nVous récupérez également un pistolet avec un chargeur de 5 balles, il est dans votre inventaire")
+            print("En faisant de tour du laboratoire, vous relevez la présence de pas mal de choses :\n- carton,\n- box,\n- casier,\n- becher,\n- caisse à outil,\n- pierre étrange,\n- microscope\nVous récupérez également un pistolet avec un chargeur de 5 balles, il est dans votre inventaire")
         case "Toit":
             if variables.balle != 0:
                 print("Tu ne peux pas explorer ici")
@@ -124,7 +123,7 @@ def interact():
             obj_hall1 = input('Avec quoi veux-tu intéragir ? :')
             if (obj_hall1 == "carton 1" or obj_hall1 == "carton 2" or obj_hall1 == "carton 3" or obj_hall1 == "carton 4" or obj_hall1 == "carton 5") and variables.attempts_carton_hall1 == 4:
                 print("Tu ne peux plus ouvrir de cartons")
-            elif (obj_hall1 != "carton 1" or obj_hall1 != "carton 2" or obj_hall1 != "carton 3" or obj_hall1 != "carton 4" or obj_hall1 != "carton 5"):
+            elif ((obj_hall1 != "carton 1") and (obj_hall1 != "carton 2") and (obj_hall1 != "carton 3") and (obj_hall1 != "carton 4") and (obj_hall1 != "carton 5")):
                 print("Tu ne peux pas intéragir avec ça")
             else:
                 if obj_hall1 == "carton 1":
@@ -147,7 +146,7 @@ def interact():
                     else:
                         variables.inventory.append("flechette")
                         variables.attempts_carton_hall1 += 1
-                        variables.etat_carton_2 = "ferme"
+                        variables.etat_carton_2 = "ouvert"
                         print("Tu viens de trouver une fléchette et l'ajoute à ton inventaire")
 
                 if obj_hall1 == "carton 3":
@@ -157,7 +156,7 @@ def interact():
                     else:
                         variables.inventory.append("flechette")
                         variables.attempts_carton_hall1 += 1
-                        variables.etat_carton_3 = "ferme"
+                        variables.etat_carton_3 = "ouvert"
                         print("Tu viens de trouver une fléchette et l'ajoute à ton inventaire")
 
                 if obj_hall1 == "carton 4":
@@ -168,7 +167,7 @@ def interact():
                         variables.inventory.append("flechette")
                         variables.inventory.append("flechette")
                         variables.attempts_carton_hall1 += 1
-                        variables.etat_carton_4 = "ferme"
+                        variables.etat_carton_4 = "ouvert"
                         print("Tu viens de trouver 2 fléchettes et les ajoute à ton inventaire")
 
                 if obj_hall1 == "carton 5":
@@ -178,7 +177,7 @@ def interact():
                     else:
                         variables.inventory.append("flechette")
                         variables.attempts_carton_hall1 += 1
-                        variables.etat_carton_5 = "ferme"
+                        variables.etat_carton_5 = "ouvert"
                         print("Tu viens de trouver une fléchette et l'ajoute à ton inventaire")
         case "Entrepôt":
             obj_entrepot = input('Avec quoi veux-tu intéragir ? :')
@@ -312,7 +311,7 @@ def interact():
                 print("BOUH !!! ToT")
             elif obj_labo == "caisse à outils":
                 print("Cette utilitaire est vide")
-            elif obj_labo == "pierre etrange":
+            elif obj_labo == "pierre étrange":
                 korogu()
             elif obj_labo == "microscope":
                 variables.inventory.append("mot")
@@ -386,6 +385,7 @@ def use():
                         tirer = input("Veux-tu tenter d'éliminer un garde ?")
                         if tirer == "oui":
                             variables.garde -= 1
+                            variables.balle -= 1
                             print("Tu as éliminé un garde ! C'est ciao !")
                             if variables.garde == 1:
                                 variables.final = True
@@ -455,6 +455,7 @@ def entry():
         case "Ascenseur":
             print("*Musique d'ascenseur*")
         case "Laboratoire":
+            variables.inventory.append("pistolet")
             print("Une atmosphère pessante règne dans cette pièce\nLes murs décrépis et les fenêtres brisées témoignent de l'usure du temps et de l'absence d'activité humaine depuis des années.")
         case "Toit":
             variables.map = []
@@ -501,7 +502,7 @@ def korogu():
         print(ligne.strip())
     print("nyah   ha   haaa !!!!")
     time.sleep(0.5)
-    print(...)
+    print("...")
     time.sleep(0.5)
     print("tou roututu tututuuuu")
     time.sleep(0.5)
@@ -521,7 +522,7 @@ def loose():
 def win():
     bim()
     time.sleep(1)
-    if variables.doc > 0:
+    if variables.doc == 3:
         print("Félicitation agent ! Grâce à ta perspicacité et ta bravoure, tu as réussi la mission Hélios avec brio !\nLe Dr. Hartman est en sécurité et les informations confidentielles sont entre de bonnes mains. Merci d'avoir accompli cette mission avec succès et d'avoir préservé la paix mondiale !")
         variables.fin = True
     else:
