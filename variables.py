@@ -1,5 +1,5 @@
 global room
-room = "Hall 1"
+room = "Laboratoire"
 
 global doc
 doc = 0
@@ -17,7 +17,7 @@ global garde
 garde = 0
 
 global map
-map = ["Extérieur", "Hall 1", "Entrepôt", "Salle des archives", "Sas"]
+map = ["Extérieur", "Ascenseur"]
 
 global dilemme
 dilemme = "non"
@@ -37,6 +37,12 @@ attempts_hall1 = 0
 global attempts_entrepot
 attempts_entrepot = 0
 
+global attempts_ascenseur
+attempts_ascenseur = 0
+
+global attempts_labo
+attempts_labo = 0
+
 global attempts_carton_hall1
 attempts_carton_hall1 = 0
 
@@ -54,5 +60,3 @@ etat_carton_4 = "ferme"
 
 global etat_carton_5
 etat_carton_5 = "ferme"
-
-

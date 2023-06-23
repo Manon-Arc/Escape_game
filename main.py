@@ -31,6 +31,8 @@ def main():
             case "return ta mere":
                 fonctions.return_ta_win()
                 break
+            case "ma bite":
+                print("Ce n'est pas très approprié...")
             case "migraculous":
                 fonctions.migraculous()
             case _:

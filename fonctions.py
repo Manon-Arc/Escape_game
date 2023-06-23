@@ -9,7 +9,7 @@ def rule():
     print(
         "Tu peux maintenant te déplacer et explorer l'environnement n'hésite pas à bien chercher partout, de nombreux indices sont cachés, tu as accès à la liste des commandes avec 'command'\nBonne chance !")
 def command():
-    print("\nSe déplacer -> 'go'\nExplorer -> 'explore'\nInteragir -> 'interact'\nOu tu es -> 'where'\nCarte -> map\nAfficher l'inventaire -> inventory\nUtiliser un objet de ton inventaire -> 'use'\nVoir ce que tu as d'équipé -> 'main' ")
+    print("\nSe déplacer -> 'go'\nExplorer -> 'explore'\nInteragir -> 'interact'\nOu tu es -> 'where'\nCarte -> 'map'\nAfficher l'inventaire -> 'inventory'\nUtiliser un objet de ton inventaire -> 'use'\nVoir ce que tu as d'équipé -> 'main' ")
 
 def go():
     piece = input('Où veux-tu aller ? :')
@@ -78,9 +78,31 @@ def explore():
                 print("Tu sens un léger courant d'air")
             else:
                 print("Tu te rend compte que ça vient d'une ventilation")
+        case "Couloir principal":
+            if variables.garde != 0:
+                cachette = input("Il y a un casier et un placard ou veux-tu te cacher")
+                if cachette == "casier":
+                    variables.garde -= 1
+                    print("Le garde s'éloigne, t'as eu chaud !")
+                elif cachette == "placard":
+                    print("Le placard est plein tu ne peux pas te cacher ici...\nLe garde t'a attrapé c'est fini pour toi...")
+                    loose()
+            else:
+                if not "Ascenseur" in variables.map:
+                    variables.map.append("Ascenseur")
+                print("Au bout du couloir tu aperçois un ascenseur à travers le hublot d'une porte")
+
         case "Sas":
             print("Il y a 2 placards au fond de la piece ainsi qu'une porte")
-
+        case "Ascenseur":
+            if variables.attempts_ascenseur == 0:
+                variables.attempts_ascenseur += 1
+                print("Il y a des boutons pour changer d'étage")
+            else:
+                print("Quelque chose semble dépasser du boitier de commande...")
+        case "Laboratoire":
+            print("Vous remarquez une porte peut-être faudrait-il une clé ?")
+            print("En faisant de tour du laboratoire, vous relevez la présence de pas mal de choses :\n-carton,\n-box,\n- casier,\n- becher,\n- caisse à outil,\n- pierre étrange,\n- microscope")
 def interact():
     match variables.room:
         case "Extérieur":
@@ -212,19 +234,98 @@ def interact():
             elif obj_sas == "placard 1":
                 print("C'est vide...")
             elif obj_sas == "porte":
-                    if not "Couloir principal" in variables.map:
-                        variables.map.append()
-                        variables.room = "Couloir principal"
-                        print("La porte s'ouvre")
-                        entry()
-                    else:
-                        print("Tu as déjà ouvert la porte")
+                if not "Couloir principal" in variables.map:
+                    variables.map.append("Couloir principal")
+                    variables.room = "Couloir principal"
+                    print("La porte s'ouvre")
+                    entry()
+                else:
+                    print("Tu as déjà ouvert la porte")
             else :
+                print("Tu ne peux pas intéragir avec ça")
+        case "Ascenseur":
+            obj_ascenseur = input('Avec quoi veux-tu intéragir ? :')
+            if obj_ascenseur == "boutons":
+                if random.randint(1,4) == 1:
+                    print("*Monte au 3e...*")
+                    time.sleep(0.5)
+                    print("...")
+                    time.sleep(0.5)
+                    print("*Redescend*, mince quelqu'un a du appeler l'ascenseur !")
+                    time.sleep(0.5)
+                    print("*Porte s'ouvre...")
+                    if variables.main_equipe == "uniforme":
+                        if random.randint(1,2) == 1:
+                            print("Des gardes arrivent du bout du couloir, et te font signe\nTu rappuies rapidement sur le bouton et la porte se ferme, heureusement que tu portais l'uniforme")
+                            variables.map = []
+                            variables.map.append("Laboratoire")
+                            variables.room == "Laboratoire"
+                            print("*Monte au 3e...*")
+                            time.sleep(2)
+                            entry()
+                        else:
+                            print("*Des gardes arrivent du bout du couloir*, Mais, tu n'es pas Michel ! *PewPewPew* ")
+                            loose()
+                else:
+                    variables.map = []
+                    variables.map.append("Laboratoire")
+                    variables.room == "Laboratoire"
+                    print("*Monte au 3e...*")
+                    time.sleep(2)
+                    entry()
+            elif obj_ascenseur == "boitier de commande":
+                variables.inventory.append("doc_Dr")
+                print("Tu viens de trouver un des documents du Dr Hartman ! Il est maintenant dans ton inventaire ")
+        case "Laboratoire":
+            obj_labo = input('Avec quoi veux-tu intéragir ? :')
+            if obj_labo == "carton":
+                print("Il y a une poule")
+                time.sleep(2)
+                print("Cote cote 🤌")
+            elif obj_labo == "box":
+                print("Il n'y a rien ici")
+            elif obj_labo == "casier":
+                print("Ce casier m'a l'air louche")
+                time.sleep(1)
+                print("on dirait qu'il y a quelque chose")
+                time.sleep(1)
+                print("...")
+                time.sleep(1.5)
+                print("...")
+                time.sleep(1.5)
+                print("QU'EST-CE QUE C'EST ?!!")
+                time.sleep(3)
+                print("En fait non y'a rien")
+                time.sleep(1)
+                print("Je rigooooleuuu UwU")
+                time.sleep(1)
+                print("T'es bo kiss kiss <3")
+            elif obj_labo == "becher":
+                print("BOUH !!! ToT")
+            elif obj_labo == "caisse à outils":
+                print("Cette utilitaire est vide")
+            elif obj_labo == "pierre etrange":
+                korogu()
+            elif obj_labo == "microscope":
+                variables.inventory.append("mot")
+                print("Tu as trouvé un mot plier près de l'appareil, il est maintenant dans ton inventaire")
+            elif obj_labo == "porte":
+                variables.map.append("Toit")
+                print("La porte était déjà déverouillé... SORRY ;)\nTu arrives dans une cage d'escalier avec un accès direct au toit")
+            else:
                 print("Tu ne peux pas intéragir avec ça")
 
 def use():
     use_object = input("Que veux-tu utiliser ?")
-    if use_object in variables.inventory:
+    if use_object == "ma bite":
+        print("Ce n'est pas très approprié...")
+    elif use_object in variables.inventory:
+        if use_object == "uniforme":
+            if variables.main_equipe != "uniforme":
+                variables.main_equipe = "uniforme"
+                print("Tu es déguisé")
+            else:
+                print("Tu es déjà déguisé")
         match variables.room:
             case "Hall 1":
                 if use_object == "flechette" and variables.camera > 0:
@@ -260,6 +361,9 @@ def use():
             case "Echafaudage":
                 if use_object == "feuille":
                     print("C'est un plan de la pièce, on dirait qu'elle indique une trappe dans l'Entrepôt...")
+            case "Laboratoire":
+                if use_object == "mot":
+                    print("Je ne pense pas qu'il y ai de bonnes ou de mauvaise situation,\nsi je devais résumer ma vie avec vous aujourd'hui c'est avant tout des rencontres des gens qui m'ont tendu la mains a des moments ou je ne m'y attendais pas")
 def entry():
     match variables.room:
         case "Extérieur":
@@ -299,12 +403,16 @@ def entry():
             if random.randint(1,100) == 1:
                 variables.map.append("Sas")
                 variables.room = "Sas"
-                print("BUUUUUUUUT *Ils ne t'ont pas entendu tu en profites pour t'enfuir vers la porte")
+                print("BUUUUUUUUT *Ils ne t'ont pas entendu tu en profites pour t'enfuir vers la porte*")
             else:
                 print("Les gardes ton vue c'est fini pour toi...")
                 loose()
         case "Sas":
             print("♫ Sas-en va et Sas-revient ♫ (référence au 'Sas') C'est sen-sas-ionnel ce jeu de mot non ? ^_^ (encore lol tavu)")
+        case "Ascenseur":
+            print("*Musique d'ascenseur*")
+        case "Laboratoire":
+            print("Une atmosphère pessante règne dans cette pièce\nLes murs décrépis et les fenêtres brisées témoignent de l'usure du temps et de l'absence d'activité humaine depuis des années.")
 def snap():
     with open("asset/snap.txt", "r") as fichier:
         lignes = fichier.readlines()
@@ -325,6 +433,13 @@ def korogu():
 
     for ligne in lignes:
         print(ligne.strip())
+    print("nyah   ha   haaa !!!!")
+    time.sleep(0.5)
+    print(...)
+    time.sleep(0.5)
+    print("tou roututu tututuuuu")
+    time.sleep(0.5)
+    print("Tu as trouvé un korogu !!!")
 
 def migraculous():
     if random.randint(1,2) == 1:
