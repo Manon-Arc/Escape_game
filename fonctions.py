@@ -3,7 +3,7 @@ import variables
 import random
 import time
 def history():
-    print("\nTu es un agent d'élite, spécialisé dans les missions de haut niveau. Cette fois-ci, tu es appelé à résoudre une crise internationale majeure.\nUn scientifique renommé, le Dr. William Hartman, a été enlevé par une organisation criminelle dangereuse.\nIl est sur le point de révéler une découverte scientifique révolutionnaire, susceptible de bouleverser l'équilibre du pouvoir mondial.\nTa mission consiste à pénétrer dans le repaire secret de l'organisation criminelle, situé au cœur d'un bâtiment qui semble désaffecté.\nTu dois libérer le Dr. Hartman, récupérer ses précieuses informations et échapper avant que l'organisation ne s'en rende compte.\nTu disposez de 30 minutes pour parcourir les pièces du repaire, résoudre des énigmes, controuner les systèmes de sécurité et trouver des indices stratégiques.\nSeras-tu capables de neutraliser l'organisation criminelle, sauver le Dr. Hartman et protéger les secrets de l'Opération Hélios ?\nLe sort du monde repose entre tes mains. Le compte à rebours a commencé. Prépares-toi à une mission palpitante, intense et semé d'embuches!\n")
+    print("\nTu es un agent d'élite, spécialisé dans les missions de haut niveau. Cette fois-ci, tu es appelé à résoudre une crise internationale majeure.\nUn scientifique renommé, le Dr. William Hartman, a été enlevé par une organisation criminelle dangereuse.\nIl est sur le point de révéler une découverte scientifique révolutionnaire, susceptible de bouleverser l'équilibre du pouvoir mondial.\nTa mission consiste à pénétrer dans le repaire secret de l'organisation criminelle, situé au cœur d'un bâtiment qui semble désaffecté.\nTu dois libérer le Dr. Hartman, récupérer ses précieuses informations et échapper avant que l'organisation ne s'en rende compte.\nTu disposez de 30 minutes pour parcourir les pièces du repaire, résoudre des énigmes, contourner les systèmes de sécurité et trouver des indices stratégiques.\nSeras-tu capables de neutraliser l'organisation criminelle, sauver le Dr. Hartman et protéger les secrets de l'Opération Hélios ?\nLe sort du monde repose entre tes mains. Le compte à rebours a commencé. Prépares-toi à une mission palpitante, intense et semé d'embuches!\n")
 
 def rule():
     print(
@@ -52,11 +52,9 @@ def explore():
             if variables.attempts_hall1 == 0:
                 print("Des caméras surveilles la zone un peu plus loin")
                 variables.attempts_hall1 += 1
-                print(variables.attempts_hall1)
             elif variables.attempts_hall1 == 1:
                 print("On peut compter 4 caméras ainsi que 5 cartons numérotés de 1 à 5")
                 variables.attempts_hall1 += 1
-                print(variables.attempts_hall1)
             else:
                 print("Le carton 1 semble plus grand que les autres")
         case "Entrepôt":
@@ -184,7 +182,7 @@ def interact():
                         print("Tu viens de trouver une fléchette et l'ajoute à ton inventaire")
         case "Entrepôt":
             obj_entrepot = input('Avec quoi veux-tu intéragir ? :')
-            if obj_entrepot == "echelle" and variables.dilemme == "non":
+            if obj_entrepot == "échelle" and variables.dilemme == "non":
                 variables.map.append("Echafaudage")
                 variables.room = "Echafaudage"
                 variables.dilemme = "oui"
