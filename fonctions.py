@@ -99,8 +99,13 @@ def explore():
             else:
                 print("Quelque chose semble dépasser du boitier de commande...")
         case "Laboratoire":
-            print("Vous remarquez une porte peut-être faudrait-il une clé ?")
-            print("En faisant de tour du laboratoire, vous relevez la présence de pas mal de choses :\n- carton,\n- box,\n- casier,\n- becher,\n- caisse à outil,\n- pierre étrange,\n- microscope\nVous récupérez également un pistolet avec un chargeur de 5 balles, il est dans votre inventaire")
+            if variables.attempts_labo == 0:
+                print("Vous remarquez une porte peut-être faudrait-il une clé ?")
+            else :
+                print("En faisant de tour du laboratoire, vous relevez la présence de pas mal de choses :\n- carton,\n- box,\n- casier,\n- becher,\n- caisse à outils,\n- pierre étrange,\n- microscope")
+                if not "pistolet" in variables.inventory :
+                    variables.inventory.append("pistolet")
+                    print("Vous récupérez également un pistolet avec un chargeur de 5 balles, il est dans votre inventaire")
         case "Toit":
             if variables.balle != 0:
                 print("Tu ne peux pas explorer ici")
@@ -217,19 +222,19 @@ def interact():
                 time.sleep(2)
                 vitesse = input("Préfères-tu te déplacer de façon rapide ou lente dans le conduit ? :")
                 if vitesse == "rapide":
-                    if random.randint(1,2) == 1:
+                    if random.randint(1,100) > 10:
                         variables.map.append("Salle de réunion")
                         variables.room = "Salle de réunion"
                         print("Le conduit se met à trembler : *Boum* Les filles je suis tombééééééhhh")
                         entry()
                     else:
-                        variables.map.append("Couloir principal")
-                        variables.room = "Couloir principal"
-                        print("Le conduit débouche dans le couloir principal")
+                        variables.map.append("Sas")
+                        variables.room = "Sas"
+                        print("Le conduit débouche dans le Sas")
                 elif vitesse == "lente":
-                    variables.map.append("Couloir principal")
-                    variables.room = "Couloir principal"
-                    print("Le conduit débouche dans le couloir principal")
+                    variables.map.append("Sas")
+                    variables.room = "Sas"
+                    print("Le conduit débouche dans le Sas")
         case "Sas":
             obj_sas = input('Avec quoi veux-tu intéragir ? :')
             if obj_sas == "placard 2":
@@ -250,7 +255,7 @@ def interact():
         case "Ascenseur":
             obj_ascenseur = input('Avec quoi veux-tu intéragir ? :')
             if obj_ascenseur == "boutons":
-                if random.randint(1,4) == 1:
+                if random.randint(1,4) > 2:
                     print("*Monte au 3e...*")
                     time.sleep(0.5)
                     print("...")
@@ -455,7 +460,6 @@ def entry():
         case "Ascenseur":
             print("*Musique d'ascenseur*")
         case "Laboratoire":
-            variables.inventory.append("pistolet")
             print("Une atmosphère pessante règne dans cette pièce\nLes murs décrépis et les fenêtres brisées témoignent de l'usure du temps et de l'absence d'activité humaine depuis des années.")
         case "Toit":
             variables.map = []
