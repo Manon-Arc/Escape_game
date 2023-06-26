@@ -509,22 +509,6 @@ def korogu():
     time.sleep(0.5)
     print("Tu as trouvé un korogu !!!")
 
-def migraculous():
-    if random.randint(1,2) == 1:
-        with open("asset/lady_beurre.txt", "r") as fichier:
-            lignes = fichier.readlines()
-
-        for ligne in lignes:
-            print(ligne.strip())
-        print("♫ Migraculous porte-bonheurt lady magique et laby-beurre ♫")
-    else:
-        with open("asset/gras_noir.txt", "r") as fichier:
-            lignes = fichier.readlines()
-
-        for ligne in lignes:
-            print(ligne.strip())
-        print("♫ C'est moi gras noir, toujours présent, j'ai les doigts gras vive l'saucisson ♫")
-
 def return_ta_win():
     bim()
     time.sleep(1)
